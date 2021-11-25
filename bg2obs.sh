@@ -46,7 +46,7 @@ do
 		e) headers="true" ;;
 		a) aliases="true" ;;
 		i) verbose="true" ;;
-		h|?) usage ;; 
+		h|?) usage ;;
 	esac
 done
 
@@ -98,8 +98,8 @@ fi
 ((next_chapter=chapter+1))
 
 # Exporting
-  export_prefix="${abbreviation}-" # Setting the first half of the filename
-
+  #export_prefix="${abbreviation}-" # Setting the first half of the filename
+	export_prefix="${book} " # Setting the first half of the filename
   if (( ${chapter} < 10 )); then # Making sure single digit numbers are preceded by a 0 for proper sorting
     #statements
     export_number="0${chapter}"
@@ -135,7 +135,7 @@ filename=${export_prefix}$export_number # Setting the filename
     navigation="[[${book}]] | [[${next_file}|${book} ${next_chapter} →]]"
   else
     # Navigation for everything else
-    navigation="[[${prev_file}|← ${book} ${prev_chapter}]] | [[${book}]] | [[${next_file}|${book} ${next_chapter} →]]"
+    navigation="[[${prev_file}|← ${prev_file}]] | [[${book}]] | [[${next_file}|${next_file} →]]"
   fi
 
   if ${boldwords} -eq "true" && ${headers} -eq "false"; then
@@ -154,13 +154,17 @@ filename=${export_prefix}$export_number # Setting the filename
   # Formatting the title for markdown
   title="# ${book} ${chapter}"
 
+	# Notes section
+	header="Related:\nStatus: #📖/🟥"
+	notes="# Notes"
+
   # Navigation format
-  export="${title}\n\n$navigation\n***\n\n$text\n\n***\n$navigation"
+  export="${header}\n${title}\n\n$navigation\n***\n\n$text\n\n---\n$notes\n\n\n***\n$navigation"
   if ${aliases} -eq "true"; then
-    alias="---\nAliases: [${book} ${chapter}]\n---\n" # Add other aliases or 'Tags:' here if desired. Make sure to follow proper YAML format.
+    alias="---\nAliases: [${book} ${chapter},${abbreviation}-${chapter}]\n---\n" # Add other aliases or 'Tags:' here if desired. Make sure to follow proper YAML format.
     export="${alias}${export}"
   fi
-  
+
 
   # Export
   echo -e $export >> "$filename.md"
@@ -192,7 +196,7 @@ done # End of the book exporting loop
 
   done
 
-  
+
   #----------------------------------------------------------------------------------
   # The Output of this text needs to be formatted slightly to fit with use in Obsidian
   # Enable Regex and run find and replace:

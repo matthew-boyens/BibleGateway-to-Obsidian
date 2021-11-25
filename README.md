@@ -1,3 +1,32 @@
+
+Forked from selfire, changes include:
+* Addition of Header and Notes sections for status and comments respectively
+  * Header section for status and general related connection
+  ```
+      Related:
+      Status: #📖/🟥
+      ```
+  * Notes section to easily put in comments across verses.
+      ```
+      i.e # Notes
+
+      # 1-3
+
+      Note on Verse 1-3 which then can be referenced in any note like so:
+       [[<Book & Chapter>#1-3]] i.e [[Genesis 1#1-3]]
+
+      ```
+* Long format book names, makes it easier to read whilst also enabling header references as verses.
+  ```
+  This is enables <Book & Chapter>#<Header> format, rather than <Book & Chapter|Alias format.
+
+  i.e Genesis 1#1-3 (Displayed as Genesis 1>1-3) instead of Gen-01#1-3|Genesis 1 (Displayed as 'Genesis 1' - specific reference is lost)
+
+  ```
+
+  You can just use Gen-01#1-3 (Displayed as Gen-01>1-3) but it is a bit harder to read. (If preferred, then uncomment line 101 and comment out 102 and this will revert to the previous format)  
+* Added  `bg2md.rb` for connivence from [jgclark/BibleGateway-to-Markdown](https://github.com/jgclark/BibleGateway-to-Markdown), so this script should work out of the box.
+
 # BibleGateway-to-Obsidian
 This script adapts [jgclark's BibleGateway-to-Markdown](https://github.com/jgclark/BibleGateway-to-Markdown) script to export for use in [Obsidian](https://obsidian.md/). It accompanies a [Bible Study in Obsidian Kit](https://forum.obsidian.md/t/bible-study-in-obsidian-kit-including-the-bible-in-markdown/12503?u=selfire) that gets you hands-on with using Scripture in your personal notes.
 
@@ -56,7 +85,7 @@ Several options are available via command-line switches. Type `bash bg2obs.sh -h
 
 #### Example usage
 | Command | Description |
-| ------- | ----------- | 
+| ------- | ----------- |
 |`bash bg2obs.sh -i -v NIV` | Download a copy of the NIV Bible with no other options.|
 |`bash bg2obs.sh -b` | Download a copy of the WEB Bible (default) with Jesus' words in bold. |
 |`bash bg2obs.sh -v NET -beai` | Download a copy of the NET Bible with all options enabled.|
