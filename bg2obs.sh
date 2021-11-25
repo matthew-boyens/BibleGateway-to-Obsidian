@@ -189,7 +189,7 @@ filename=${export_prefix}$export_number # Setting the filename
 done # End of the book exporting loop
 
   # Create an overview file for each book of the Bible:
-  overview_file="links: [[The Bible]]\n# ${book}\n\n[[${abbreviation}-01|Start Reading →]]"
+  overview_file="links: [[The Bible]]\n# ${book}\n\n[[${book} 01|Start Reading →]]"
   echo -e $overview_file >> "$book.md"
   #mkdir -p ./Scripture ("${translation}")/"${folder_name}"; mv "$book.md" './Scripture ('"${translation}"')/'"${folder_name}"
   mv "$book.md" './Scripture ('"${translation}"')/'"${folder_name}"
@@ -227,7 +227,13 @@ fi
 find . -name "*.md" -print0 | xargs -0 perl -pi -e 's/#.*(#####\D[1]\D)/#$1/g'
 
 # Format verses into H6 headers
-find . -name "*.md" -print0 | xargs -0 perl -pi -e 's/######\s([0-9]\s|[0-9][0-9]\s|[0-9][0-9][0-9]\s)/\n\n###### v$1\n/g'
+find . -name "*.md" -print0 | xargs -0 perl -pi -e 's/######\s([0-9]\s|[0-9][0-9]\s|[0-9][0-9][0-9]\s)/\n\n###### $1\n/g'
+
+# Remove v from headers
+
+#find . -name "*.md" -print0 | xargs -0 perl -pi -e 'v(d+) $1/g'
+
+
 
 if ${verbose} -eq "true"; then
 echo "Download complete. Markdown files ready for Obsidian import."
