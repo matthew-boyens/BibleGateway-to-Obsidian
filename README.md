@@ -27,6 +27,14 @@ Forked from selfire, changes include:
   You can just use Gen-01#1-3 (Displayed as Gen-01>1-3) but it is a bit harder to read. (If preferred, then uncomment line 101 and comment out 102 and this will revert to the previous format)  
 * Added  `bg2md.rb` for connivence from [jgclark/BibleGateway-to-Markdown](https://github.com/jgclark/BibleGateway-to-Markdown), so this script should work out of the box.
 
+## Quickstart
+
+Open the folder of this readme in terminal
+
+Run
+
+`./bg2obs.sh -v NLT -b -e -i` to download the NLT version
+
 # BibleGateway-to-Obsidian
 This script adapts [jgclark's BibleGateway-to-Markdown](https://github.com/jgclark/BibleGateway-to-Markdown) script to export for use in [Obsidian](https://obsidian.md/). It accompanies a [Bible Study in Obsidian Kit](https://forum.obsidian.md/t/bible-study-in-obsidian-kit-including-the-bible-in-markdown/12503?u=selfire) that gets you hands-on with using Scripture in your personal notes.
 

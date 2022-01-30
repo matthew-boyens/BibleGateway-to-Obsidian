@@ -151,6 +151,8 @@ filename=${export_prefix}$export_number # Setting the filename
 
   text=$(echo $text | sed 's/^(.*?)v1/v1/') # Deleting unwanted headers
 
+	text=$(echo $text | sed  -E 's/(\.)([a-zA-Z]+\s)/\1\n\n##### \2/') ## Adding formating to most headers (verses that end with " will still need to be manually updated)
+
   # Formatting the title for markdown
   title="# ${book} ${chapter}"
 
