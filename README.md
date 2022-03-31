@@ -27,6 +27,16 @@ Forked from selfire, changes include:
   You can just use Gen-01#1-3 (Displayed as Gen-01>1-3) but it is a bit harder to read. (If preferred, then uncomment line 101 and comment out 102 and this will revert to the previous format)  
 * Added  `bg2md.rb` for connivence from [jgclark/BibleGateway-to-Markdown](https://github.com/jgclark/BibleGateway-to-Markdown), so this script should work out of the box.
 
+* Update to headers 
+
+### Mannual to Editorial Headers for NLT
+Run this to put the headers on a new line
+
+Search: (\.)([a-zA-Z]+\s)
+
+Replace: $1\n\n##### $2
+
+
 ## Quickstart
 
 Open the folder of this readme in terminal
