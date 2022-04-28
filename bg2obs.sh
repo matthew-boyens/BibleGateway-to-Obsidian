@@ -157,7 +157,7 @@ filename=${export_prefix}$export_number # Setting the filename
   title="# ${book} ${chapter}"
 
 	# Notes section
-	header="Related:\nStatus: #📖/🟥"
+	header="Related:\nStatus:: #📖/🟥"
 	notes="# Notes"
 
   # Navigation format
