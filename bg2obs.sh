@@ -157,8 +157,14 @@ filename=${export_prefix}$export_number # Setting the filename
   title="# ${book} ${chapter}"
 
 	# Notes section
-	header="Related::\nStatus:: #📖/🟥"
-	notes="# Notes"
+
+  if ((${book_counter} < 39)); then
+    header="Related::[[Old Testament]]\nStatus:: #📖/🟥"
+    notes="# Notes"
+  else 
+    	header="Related::[[New Testament]]\nStatus:: #📖/🟥"
+	  notes="# Notes"
+  fi
 
   # Navigation format
   export="${header}\n${title}\n\n$navigation\n***\n\n$text\n\n---\n$notes\n\n\n***\n$navigation"
