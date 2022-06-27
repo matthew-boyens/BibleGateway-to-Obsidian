@@ -73,134 +73,135 @@ fi
 
  # Cycling through the book counter, setting which book and its maxchapter
   for ((book_counter=0; book_counter <= book_counter_max; book_counter++))
-  do
-
-	if ${verbose} -eq "true"; then
-		echo ""   # Make a new line which the '-n' flag to the echo command prevents.
-	fi
-
-    book=${bookarray[$book_counter]}
-    maxchapter=${lengtharray[$book_counter]}
-    abbreviation=${abbarray[$book_counter]}
-
-	if ${verbose} -eq "true"; then
-		echo -n "${book} "
-	fi
-
-    for ((chapter=1; chapter <= maxchapter; chapter++))
     do
 
-    	if ${verbose} -eq "true"; then
-    		echo -n "."
-		fi
+    if ${verbose} -eq "true"; then
+      echo ""   # Make a new line which the '-n' flag to the echo command prevents.
+    fi
 
-((prev_chapter=chapter-1)) # Counting the previous and next chapter for navigation
-((next_chapter=chapter+1))
+      book=${bookarray[$book_counter]}
+      maxchapter=${lengtharray[$book_counter]}
+      abbreviation=${abbarray[$book_counter]}
 
-# Exporting
-  #export_prefix="${abbreviation}-" # Setting the first half of the filename
-	export_prefix="${book} " # Setting the first half of the filename
-  if (( ${chapter} < 10 )); then # Making sure single digit numbers are preceded by a 0 for proper sorting
-    #statements
-    export_number="0${chapter}"
-  else
-    export_number=${chapter}
-  fi
+      if ((${book_counter} < 39)); then
+        testament="Old Testament"
+      else
+        testament="New Testament"
+      fi
 
-filename=${export_prefix}$export_number # Setting the filename
+    if ${verbose} -eq "true"; then
+      echo -n "${book} "
+    fi
 
-# Navigation in the note
-  if (( ${prev_chapter} < 10 )); then # Turning single into double digit numbers
-    #statements
-    prev_chapter="0${prev_chapter}"
-  fi
+    for ((chapter=1; chapter <= maxchapter; chapter++))
+      do
 
-  if (( ${next_chapter} < 10 )); then # Turning single into double digit numbers
-    #statements
-    next_chapter="0${next_chapter}"
-  fi
+        if ${verbose} -eq "true"; then
+          echo -n "."
+      fi
 
-  prev_file=${export_prefix}$prev_chapter # Naming previous and next files
-  next_file=${export_prefix}$next_chapter
+      ((prev_chapter=chapter-1)) # Counting the previous and next chapter for navigation
+      ((next_chapter=chapter+1))
 
-  # Formatting Navigation and omitting links that aren't necessary
-  if [ ${maxchapter} -eq 1 ]; then
-    # For a book that only has one chapter
-    navigation="[[${book}]]"
-  elif [ ${chapter} -eq ${maxchapter} ]; then
-    # If this is the last chapter of the book
-    navigation="[[${prev_file}|← ${book} ${prev_chapter}]] | [[${book}]]"
-  elif [ ${chapter} -eq 1 ]; then
-    # If this is the first chapter of the book
-    navigation="[[${book}]] | [[${next_file}|${book} ${next_chapter} →]]"
-  else
-    # Navigation for everything else
-    navigation="[[${prev_file}|← ${prev_file}]] | [[${book}]] | [[${next_file}|${next_file} →]]"
-  fi
+        # Exporting
+        #export_prefix="${abbreviation}-" # Setting the first half of the filename
+        export_prefix="${book} " # Setting the first half of the filename
+        if (( ${chapter} < 10 )); then # Making sure single digit numbers are preceded by a 0 for proper sorting
+          #statements
+          export_number="0${chapter}"
+        else
+          export_number=${chapter}
+        fi
 
-  if ${boldwords} -eq "true" && ${headers} -eq "false"; then
-    text=$(ruby bg2md.rb -e -c -b -f -l -r -v "${translation}" ${book} ${chapter}) # This calls the 'bg2md_mod' script
-  elif ${boldwords} -eq "true" && ${headers} -eq "true"; then
-    text=$(ruby bg2md.rb -c -b -f -l -r -v "${translation}" ${book} ${chapter}) # This calls the 'bg2md_mod' script
-  elif ${boldwords} -eq "false" && ${headers} -eq "true"; then
-    text=$(ruby bg2md.rb -e -c -f -l -r -v "${translation}" ${book} ${chapter}) # This calls the 'bg2md_mod' script
-  else
-    text=$(ruby bg2md.rb -e -c -f -l -r -v "${translation}" ${book} ${chapter}) # This calls the 'bg2md_mod' script
-  fi
+      filename=${export_prefix}$export_number # Setting the filename
 
+      # Navigation in the note
+        if (( ${prev_chapter} < 10 )); then # Turning single into double digit numbers
+          #statements
+          prev_chapter="0${prev_chapter}"
+        fi
 
-  text=$(echo $text | sed 's/^(.*?)v1/v1/') # Deleting unwanted headers
+        if (( ${next_chapter} < 10 )); then # Turning single into double digit numbers
+          #statements
+          next_chapter="0${next_chapter}"
+        fi
 
-	text=$(echo $text | sed  -E 's/(\.)([a-zA-Z]+\s)/\1\n\n##### \2/') ## Adding formating to most headers (verses that end with " will still need to be manually updated)
+        prev_file=${export_prefix}$prev_chapter # Naming previous and next files
+        next_file=${export_prefix}$next_chapter
 
-  # Formatting the title for markdown
-  title="# ${book} ${chapter}"
+        # Formatting Navigation and omitting links that aren't necessary
+        if [ ${maxchapter} -eq 1 ]; then
+          # For a book that only has one chapter
+          navigation="[[${book}]]"
+        elif [ ${chapter} -eq ${maxchapter} ]; then
+          # If this is the last chapter of the book
+          navigation="[[${prev_file}|← ${book} ${prev_chapter}]] | [[${book}]]"
+        elif [ ${chapter} -eq 1 ]; then
+          # If this is the first chapter of the book
+          navigation="[[${book}]] | [[${next_file}|${book} ${next_chapter} →]]"
+        else
+          # Navigation for everything else
+          navigation="[[${prev_file}|← ${prev_file}]] | [[${book}]] | [[${next_file}|${next_file} →]]"
+        fi
 
-	# Notes section
-
-  if ((${book_counter} < 39)); then
-    header="Related::[[Old Testament]]\nStatus:: #📖/🟥"
-    notes="# Notes"
-  else 
-    	header="Related::[[New Testament]]\nStatus:: #📖/🟥"
-	  notes="# Notes"
-  fi
-
-  # Navigation format
-  export="${header}\n${title}\n\n$navigation\n***\n\n$text\n\n---\n$notes\n\n\n***\n$navigation"
-  if ${aliases} -eq "true"; then
-    alias="---\nAliases: [${book} ${chapter},${abbreviation}-${chapter}]\n---\n" # Add other aliases or 'Tags:' here if desired. Make sure to follow proper YAML format.
-    export="${alias}${export}"
-  fi
+        if ${boldwords} -eq "true" && ${headers} -eq "false"; then
+          text=$(ruby bg2md.rb -e -c -b -f -l -r -v "${translation}" ${book} ${chapter}) # This calls the 'bg2md_mod' script
+        elif ${boldwords} -eq "true" && ${headers} -eq "true"; then
+          text=$(ruby bg2md.rb -c -b -f -l -r -v "${translation}" ${book} ${chapter}) # This calls the 'bg2md_mod' script
+        elif ${boldwords} -eq "false" && ${headers} -eq "true"; then
+          text=$(ruby bg2md.rb -e -c -f -l -r -v "${translation}" ${book} ${chapter}) # This calls the 'bg2md_mod' script
+        else
+          text=$(ruby bg2md.rb -e -c -f -l -r -v "${translation}" ${book} ${chapter}) # This calls the 'bg2md_mod' script
+        fi
 
 
-  # Export
-  echo -e $export >> "$filename.md"
+        text=$(echo $text | sed 's/^(.*?)v1/v1/') # Deleting unwanted headers
 
-  # Creating a folder
+        text=$(echo $text | sed  -E 's/(\.)([a-zA-Z]+\s)/\1\n\n##### \2/') ## Adding formating to most headers (verses that end with " will still need to be manually updated)
 
-  ((actual_num=book_counter+1)) # Proper number counting for the folder
+        # Formatting the title for markdown
+        title="# ${book} ${chapter}"
 
-  if (( $actual_num < 10 )); then
-    #statements
-    actual_num="0${actual_num}"
-  else
-    actual_num=$actual_num
-  fi
+        # Notes section
 
-  folder_name="${actual_num} - ${book}" # Setting the folder name
+        header="Related::[[${testament}]]\nStatus:: #📖/🟥"
+        notes="# Notes"
 
-  # Creating a folder for the book of the Bible if it doesn't exist, otherwise moving new file into existing folder
-  mkdir -p "./Scripture (${translation})/${folder_name}"; mv "${filename}".md './Scripture ('"${translation}"')/'"${folder_name}"
+        # Navigation format
+        export="${header}\n${title}\n\n$navigation\n***\n\n$text\n\n---\n$notes\n\n\n***\n$navigation"
+        if ${aliases} -eq "true"; then
+          alias="---\nAliases: [${book} ${chapter},${abbreviation}-${chapter}]\n---\n" # Add other aliases or 'Tags:' here if desired. Make sure to follow proper YAML format.
+          export="${alias}${export}"
+        fi
 
 
-done # End of the book exporting loop
+        # Export
+        echo -e $export >> "$filename.md"
 
-  # Create an overview file for each book of the Bible:
-  overview_file="links: [[The Bible]]\n# ${book}\n\n[[${book} 01|Start Reading →]]"
-  echo -e $overview_file >> "$book.md"
-  #mkdir -p ./Scripture ("${translation}")/"${folder_name}"; mv "$book.md" './Scripture ('"${translation}"')/'"${folder_name}"
-  mv "$book.md" './Scripture ('"${translation}"')/'"${folder_name}"
+        # Creating a folder
+
+        ((actual_num=book_counter+1)) # Proper number counting for the folder
+
+        if (( $actual_num < 10 )); then
+          #statements
+          actual_num="0${actual_num}"
+        else
+          actual_num=$actual_num
+        fi
+
+        folder_name="${actual_num} - ${book}" # Setting the folder name
+
+        # Creating a folder for the book of the Bible if it doesn't exist, otherwise moving new file into existing folder
+        mkdir -p "./Scripture (${translation})/${folder_name}"; mv "${filename}".md './Scripture ('"${translation}"')/'"${folder_name}"
+
+
+      done # End of the book exporting loop
+
+    # Create an overview file for each book of the Bible:
+    overview_file="links: [[The Bible]] [[${testament}]]\nStatus:: #📖/🚰\n# ${book}\n\n[[${book} 01|Start Reading →]]"
+    echo -e $overview_file >> "$book.md"
+    #mkdir -p ./Scripture ("${translation}")/"${folder_name}"; mv "$book.md" './Scripture ('"${translation}"')/'"${folder_name}"
+    mv "$book.md" './Scripture ('"${translation}"')/'"${folder_name}"
 
   done
 
