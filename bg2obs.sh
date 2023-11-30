@@ -92,6 +92,7 @@ do
     all_translations+=("$translation")
 done
 
+echo " ${all_translations[@]}"
 # Initialize variables
 book_counter=0 # Setting the counter to 0
 book_counter_max=66 # Setting the max amount to 66, since there are 66 books we want to import
@@ -233,15 +234,21 @@ if [[ $verbose = "true" ]] ; then
 	echo "Cleaning up the Markdown files."
 fi
 
-find . -name "*.md" -print0 | xargs -0 perl -0777 -pi -e 's/#### About\n.*\n\n.*Preferences//gs'
-# Clear unnecessary headers
-find . -name "*.md" -print0 | xargs -0 perl -pi -e 's/#.*(#####\D[1]\D)/#$1/g'
+## Cleaning translations that have been downloaded only
+for translation in "${all_translations[@]}"
+do
+    echo "Cleaning ${translation}"
+    find Scripture/$translation -name "*.md" -print0 | xargs -0 perl -0777 -pi -e 's/#### About\n.*\n\n.*Preferences//gs'
+    # Clear unnecessary headers
+    find Scripture/$translation -name "*.md" -print0 | xargs -0 perl -pi -e 's/#.*(#####\D[1]\D)/#$1/g'
 
-# Format verses into H6 headers
-find . -name "*.md" -print0 | xargs -0 perl -pi -e 's/#####\s(\d+)(.*)(\n)?/\n##### $1\n$2\n\n/'
+    # Format verses into H6 headers
+    find Scripture/$translation -name "*.md" -print0 | xargs -0 perl -pi -e 's/#####\s(\d+)(.*)(\n)?/\n##### $1\n$2\n\n/'
 
-# Delete crossreferences
-find . -name "*.md" -print0 | xargs -0 perl -pi -e 's/\<crossref intro.*crossref\>//g'
+    # Delete crossreferences
+    find Scripture/$translation -name "*.md" -print0 | xargs -0 perl -pi -e 's/\<crossref intro.*crossref\>//g'
+
+done
 
 if [[ $verbose = "true" ]]; then
 echo "Download complete. Markdown files ready for Obsidian import."
