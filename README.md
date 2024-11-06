@@ -1,4 +1,26 @@
 
+To setup run in unix terminal
+```
+chmod +x setup.sh
+./setup.sh
+
+```
+You might need to comment out the xsel line if you aren't using wsl
+
+To run
+
+```
+./bg2obs.sh -v ESV -b -e -i -s NLT
+```
+
+for ESV to be your main translation and then NLT as a secondary, where filenames become 
+`NLT Matt 5.md` instead of `Matt 5.md`
+
+you then need to run 
+
+`python crossref.py ./Scripture` to convert the cross references to wikilinks
+
+
 Forked from selfire, changes include:
 * Addition of Header and Notes sections for status and comments respectively
   * Header section for status and general related connection
